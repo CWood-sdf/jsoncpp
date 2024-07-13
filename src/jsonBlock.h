@@ -56,9 +56,10 @@ struct JsonBlock {
 
     static_assert(s[Skip3::i] == '}', "Expected a } to close a json block");
 
-    static constexpr auto value = Read::value;
+    static constexpr Read value = Read();
     static const int i = Skip3::i + 1;
 };
+
 template <Str s, size_t len, int _i, IsProp... props>
 struct ReadValue<s, len, _i, JsonPropertyList<props...>>
   : public JsonBlock<s, len, _i, JsonPropertyList<props...>> {};
@@ -95,6 +96,9 @@ template <class T, IsProp P>
 struct FindProp {
     static_assert(false, "Could not find prop");
 };
+
+template <class T, IsProp P>
+struct FindProp<const T, P> : FindProp<T, P> {};
 
 template <Str s, size_t len, int _i, class JsonPropList, IsProp P>
 struct FindProp<JsonBlock<s, len, _i, JsonPropList>, P> {
@@ -146,7 +150,8 @@ template <Str s, size_t len, int _i, IsProp T1, Str name, size_t nameLen,
 struct FindProp<ReadPropList<s, len, _i, JsonPropertyList<T1>>,
     Prop<name, nameLen, PropTp>> {
     typedef ReadPropList<s, len, _i, JsonPropertyList<T1>> Read;
-    typedef Read::Prop::Value Value;
+    // typedef Read Value;
+    typedef Read::Prop Value;
     static constexpr auto value = Read::value;
 };
 
@@ -157,5 +162,5 @@ template <Str s, size_t len, int _i, IsProp T1, Str name, size_t nameLen,
     requires(!PropEq<T1, name, nameLen>::value)
 struct FindProp<ReadPropList<s, len, _i, JsonPropertyList<T1>>,
     Prop<name, nameLen, PropTp>> {
-    static_assert(false, "Could not find prop");
+    static_assert(false, "From last element");
 };

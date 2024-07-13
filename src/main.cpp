@@ -14,11 +14,16 @@ int main() {
     typedef JsonBlock<str, sizeof(str), 0, JsonPropertyList<P, P2, P3>> Read;
     // cout << Read::Next::value << endl;
     // cout << PropEq<P2, propName, sizeof(propName)>::value << endl;
-    typedef FindProp<Read, P3>::Value SubObj;
-    SubObj asdf;
+    typedef FindProp<Read, P3> SubObj;
+    typedef decltype(SubObj::value) Asdf;
+    // SubObj::Value asdf;
+    // cout << SubObj::value << endl;
+    cout << FindProp<Asdf, P2>::value << endl;
 
-    cout << FindProp<SubObj, P>::value << endl;
+    // cout << FindProp<decltype(SubObj::value), P>::value << endl;
+    // Read::value
 
+    cout << FindProp<Read, P2>::value << endl;
     // cout << FindProp<FindProp<Read, P3>, P>::value << endl;
     // cout << Read::i << endl;
 }
