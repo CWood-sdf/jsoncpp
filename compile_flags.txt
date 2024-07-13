@@ -1,0 +1,5 @@
+-xc++
+
+-Wunused
+
+-std=c++23

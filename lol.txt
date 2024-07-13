@@ -1,0 +1,84 @@
+LOL I BROKE CLANG
+
+src/main.cpp
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.      Program arguments: clang -c src/main.cpp -Wall -Wextra -Wpedantic -std=c++23 -ftemplate-backtrace-limit=0 -glldb -DUNIX -o bin/linux64/src/main.o
+1.      <eof> parser at end of file
+2.      src/main.cpp:3:5: LLVM IR generation of declaration 'main'
+3.      src/main.cpp:3:5: Generating code for declaration 'main'
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+0  libLLVM-17.so      0x00007bbfae37bcb0 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) + 64
+1  libLLVM-17.so      0x00007bbfae37918d llvm::sys::CleanupOnSignal(unsigned long) + 141
+2  libLLVM-17.so      0x00007bbfae269479
+3  libc.so.6          0x00007bbfad650ae0
+4  libclang-cpp.so.17 0x00007bbfb63c31f7
+5  libclang-cpp.so.17 0x00007bbfb63de4c8 clang::ASTContext::getTypeInfoImpl(clang::Type const*) const + 248
+6  libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+7  libclang-cpp.so.17 0x00007bbfb63de727 clang::ASTContext::getTypeInfoImpl(clang::Type const*) const + 855
+8  libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+9  libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+10 libclang-cpp.so.17 0x00007bbfb63de727 clang::ASTContext::getTypeInfoImpl(clang::Type const*) const + 855
+11 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+12 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+13 libclang-cpp.so.17 0x00007bbfb63de727 clang::ASTContext::getTypeInfoImpl(clang::Type const*) const + 855
+14 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+15 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+16 libclang-cpp.so.17 0x00007bbfb63de727 clang::ASTContext::getTypeInfoImpl(clang::Type const*) const + 855
+17 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+18 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+19 libclang-cpp.so.17 0x00007bbfb63de727 clang::ASTContext::getTypeInfoImpl(clang::Type const*) const + 855
+20 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+21 libclang-cpp.so.17 0x00007bbfb63df093 clang::ASTContext::getTypeInfo(clang::Type const*) const + 147
+22 libclang-cpp.so.17 0x00007bbfb63df83b clang::ASTContext::getPreferredTypeAlign(clang::Type const*) const + 43
+23 libclang-cpp.so.17 0x00007bbfb63e183b clang::ASTContext::getDeclAlign(clang::Decl const*, bool) const + 939
+24 libclang-cpp.so.17 0x00007bbfb733d305 clang::CodeGen::CodeGenFunction::EmitAutoVarAlloca(clang::VarDecl const&) + 165
+25 libclang-cpp.so.17 0x00007bbfb7343e7e clang::CodeGen::CodeGenFunction::EmitAutoVarDecl(clang::VarDecl const&) + 46
+26 libclang-cpp.so.17 0x00007bbfb7344092 clang::CodeGen::CodeGenFunction::EmitDecl(clang::Decl const&) + 130
+27 libclang-cpp.so.17 0x00007bbfb74a1d77 clang::CodeGen::CodeGenFunction::EmitDeclStmt(clang::DeclStmt const&) + 135
+28 libclang-cpp.so.17 0x00007bbfb74c00ad clang::CodeGen::CodeGenFunction::EmitSimpleStmt(clang::Stmt const*, llvm::ArrayRef<clang::Attr const*>) + 253
+29 libclang-cpp.so.17 0x00007bbfb74bae14 clang::CodeGen::CodeGenFunction::EmitStmt(clang::Stmt const*, llvm::ArrayRef<clang::Attr const*>) + 100
+30 libclang-cpp.so.17 0x00007bbfb74bbf49 clang::CodeGen::CodeGenFunction::EmitCompoundStmtWithoutScope(clang::CompoundStmt const&, bool, clang::CodeGen::AggValueSlot) + 153
+31 libclang-cpp.so.17 0x00007bbfb751347b clang::CodeGen::CodeGenFunction::EmitFunctionBody(clang::Stmt const*) + 235
+32 libclang-cpp.so.17 0x00007bbfb751404f clang::CodeGen::CodeGenFunction::GenerateCode(clang::GlobalDecl, llvm::Function*, clang::CodeGen::CGFunctionInfo const&) + 687
+33 libclang-cpp.so.17 0x00007bbfb7554853 clang::CodeGen::CodeGenModule::EmitGlobalFunctionDefinition(clang::GlobalDecl, llvm::GlobalValue*) + 403
+34 libclang-cpp.so.17 0x00007bbfb7551e04 clang::CodeGen::CodeGenModule::EmitGlobalDefinition(clang::GlobalDecl, llvm::GlobalValue*) + 628
+35 libclang-cpp.so.17 0x00007bbfb75524e3 clang::CodeGen::CodeGenModule::EmitGlobal(clang::GlobalDecl) + 1747
+36 libclang-cpp.so.17 0x00007bbfb7559e25
+37 libclang-cpp.so.17 0x00007bbfb75c3af7
+38 libclang-cpp.so.17 0x00007bbfb74ca188
+39 libclang-cpp.so.17 0x00007bbfb62fbd83 clang::ParseAST(clang::Sema&, bool, bool) + 579
+40 libclang-cpp.so.17 0x00007bbfb7bc44f9 clang::FrontendAction::Execute() + 393
+41 libclang-cpp.so.17 0x00007bbfb7bb0df7 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) + 391
+42 libclang-cpp.so.17 0x00007bbfb7c93c92 clang::ExecuteCompilerInvocation(clang::CompilerInstance*) + 450
+43 clang              0x000057bd8ac8dc18 cc1_main(llvm::ArrayRef<char const*>, char const*, void*) + 3928
+44 clang              0x000057bd8ac9310f
+45 libclang-cpp.so.17 0x00007bbfb78d5fdd
+46 libLLVM-17.so      0x00007bbfae2698ca llvm::CrashRecoveryContext::RunSafely(llvm::function_ref<void ()>) + 42
+47 libclang-cpp.so.17 0x00007bbfb78dd174
+48 libclang-cpp.so.17 0x00007bbfb789e4f1 clang::driver::Compilation::ExecuteCommand(clang::driver::Command const&, clang::driver::Command const*&, bool) const + 161
+49 libclang-cpp.so.17 0x00007bbfb789e8ad clang::driver::Compilation::ExecuteJobs(clang::driver::JobList const&, llvm::SmallVectorImpl<std::pair<int, clang::driver::Command const*>>&, bo
+ol) const + 253
+50 libclang-cpp.so.17 0x00007bbfb78fd07c clang::driver::Driver::ExecuteCompilation(clang::driver::Compilation&, llvm::SmallVectorImpl<std::pair<int, clang::driver::Command const*>>&) + 
+412
+51 clang              0x000057bd8ac9577b clang_main(int, char**, llvm::ToolContext const&) + 8939
+52 clang              0x000057bd8ac89d54 main + 52
+53 libc.so.6          0x00007bbfad639c88
+54 libc.so.6          0x00007bbfad639d4c __libc_start_main + 140
+55 clang              0x000057bd8ac89d95 _start + 37
+clang: error: clang frontend command failed with exit code 139 (use -v to see invocation)
+clang version 17.0.6
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+clang: note: diagnostic msg: 
+********************
+
+PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:
+Preprocessed source(s) and associated run script(s) are located at:
+clang: note: diagnostic msg: /tmp/main-b08c0e.cpp
+clang: note: diagnostic msg: /tmp/main-b08c0e.sh
+clang: note: diagnostic msg: 
+
+********************
+make: *** [Makefile:44: bin/linux64/src/main.o] Error 1
