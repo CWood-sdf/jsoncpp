@@ -1,11 +1,5 @@
 #include "property.h"
 
-template <class C>
-concept IsProp = requires(C c) {
-    // from stack overflow https://stackoverflow.com/a/71921982/22302689
-    []<Str n, size_t len, typename T>(Prop<n, len, T>&) {}(c);
-};
-
 template <typename T, Str name, size_t len, int i = 0>
 struct PropEq {
     typedef PropEq<T, name, len, i> Next;
@@ -58,6 +52,7 @@ struct JsonBlock {
 
     static constexpr Read value = Read();
     static const int i = Skip3::i + 1;
+    typedef decltype(value) Value;
 };
 
 template <Str s, size_t len, int _i, IsProp... props>
@@ -101,14 +96,17 @@ template <class T, IsProp P>
 struct FindProp<const T, P> : FindProp<T, P> {};
 
 template <Str s, size_t len, int _i, class JsonPropList, IsProp P>
+struct FindProp<ReadValue<s, len, _i, JsonPropList>, P>
+  : public FindProp<JsonBlock<s, len, _i, JsonPropList>, P> {};
+
+template <Str s, size_t len, int _i, class JsonPropList, IsProp P>
 struct FindProp<JsonBlock<s, len, _i, JsonPropList>, P> {
 
     typedef FindProp<typename JsonBlock<s, len, _i, JsonPropList>::Read, P>
         Read;
 
-    typedef Read::Value Value;
-
     static constexpr auto value = Read::value;
+    typedef decltype(value) Value;
 };
 
 template <Str s, size_t len, int _i, Str name, size_t nameLen, typename PropTp>
@@ -150,7 +148,6 @@ template <Str s, size_t len, int _i, IsProp T1, Str name, size_t nameLen,
 struct FindProp<ReadPropList<s, len, _i, JsonPropertyList<T1>>,
     Prop<name, nameLen, PropTp>> {
     typedef ReadPropList<s, len, _i, JsonPropertyList<T1>> Read;
-    // typedef Read Value;
     typedef Read::Prop Value;
     static constexpr auto value = Read::value;
 };

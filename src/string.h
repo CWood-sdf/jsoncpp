@@ -59,3 +59,6 @@ struct ReadString<s, len, _i, StringClass<chars...>, true> {
     static const int i = _i + 1;
     static constexpr std::string value = StringClass<chars...>::toString();
 };
+
+template <Str s, size_t len, int _i>
+struct ReadValue<s, len, _i, std::string> : public ReadString<s, len, _i> {};

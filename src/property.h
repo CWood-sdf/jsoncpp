@@ -1,11 +1,19 @@
 #include "string.h"
-#include "toNum.h"
+#include "toDouble.h"
+// #include "toNum.h"
 #include "utils.h"
 #include <string>
+
 template <Str name, size_t len, typename Tp>
 struct Prop {
     static constexpr std::string nameStr = name;
     typedef Tp Type;
+};
+
+template <class C>
+concept IsProp = requires(C c) {
+    // from stack overflow https://stackoverflow.com/a/71921982/22302689
+    []<Str n, size_t len, typename T>(Prop<n, len, T>&) {}(c);
 };
 
 template <Str s, size_t len, int _i, typename Prop, int propI = -1>
@@ -67,14 +75,18 @@ struct ValidateProp<s, len, _i, Prop<propName, propLen, Tp>, propI> {
     static const int i = _i + 1;
 };
 
-template <Str s, size_t len, int _i, typename T>
-struct ReadValue {};
-
-template <Str s, size_t len, int _i>
-struct ReadValue<s, len, _i, int> : public ReadNum<s, len, _i> {};
-
-template <Str s, size_t len, int _i>
-struct ReadValue<s, len, _i, std::string> : public ReadString<s, len, _i> {};
+template <class T>
+T defaultInst() {
+    T ret;
+    return ret;
+}
+template <typename T>
+concept Readable = requires() {
+    []<Str s, size_t len, int i>() {
+        ReadValue<s, len, i, T> ret;
+        return ret;
+    }();
+};
 
 template <Str s, size_t len, int _i, typename PropTp>
 struct ReadProp {
